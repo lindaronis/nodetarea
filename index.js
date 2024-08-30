@@ -28,8 +28,8 @@ app.get('/clientes', (req, res) => {
 
 // Ruta para obtener productos
 app.get('/productos', (req, res) => {
-    res.json(productos);
-  });
+  res.json(productos);
+});
 
 // Ruta para agregar un cliente
 app.post('/clientes', (req, res) => {
@@ -42,8 +42,16 @@ app.post('/clientes', (req, res) => {
 app.put('/clientes/:id', (req, res) => {
   const { id } = req.params;
   const updatedCliente = req.body;
-  clientes = clientes.map(cliente => cliente.id === parseInt(id) ? updatedCliente : cliente);
-  res.json(updatedCliente);
+  
+  // Encuentra el índice del cliente a actualizar
+  const index = clientes.findIndex(cliente => cliente.id === parseInt(id));
+  if (index !== -1) {
+    // Actualiza solo las propiedades que han cambiado
+    clientes[index] = { ...clientes[index], ...updatedCliente };
+    res.json(clientes[index]);
+  } else {
+    res.status(404).send('Cliente no encontrado');
+  }
 });
 
 // Ruta para eliminar un cliente
@@ -64,8 +72,16 @@ app.post('/productos', (req, res) => {
 app.put('/productos/:id', (req, res) => {
   const { id } = req.params;
   const updatedProducto = req.body;
-  productos = productos.map(producto => producto.id === parseInt(id) ? updatedProducto : producto);
-  res.json(updatedProducto);
+  
+  // Encuentra el índice del producto a actualizar
+  const index = productos.findIndex(producto => producto.id === parseInt(id));
+  if (index !== -1) {
+    // Actualiza solo las propiedades que han cambiado
+    productos[index] = { ...productos[index], ...updatedProducto };
+    res.json(productos[index]);
+  } else {
+    res.status(404).send('Producto no encontrado');
+  }
 });
 
 // Ruta para eliminar un producto
@@ -75,9 +91,10 @@ app.delete('/productos/:id', (req, res) => {
   res.status(204).send();
 });
 
-
 // Iniciar el servidor
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Servidor corriendo en el puerto ${port}`);
 });
+
+
