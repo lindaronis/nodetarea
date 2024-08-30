@@ -88,7 +88,7 @@ app.put('/productos/:id', (req, res) => {
 app.delete('/productos/:id', (req, res) => {
   const { id } = req.params;
   productos = productos.filter(producto => producto.id !== parseInt(id));
-  res.status(204).send('Elemento eliminado');
+  res.status(204).send({ message: 'Elemento eliminado' });
 });
 
 // Iniciar el servidor
